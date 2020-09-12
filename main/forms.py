@@ -7,3 +7,4 @@ class CreateLog(forms.ModelForm):
         model = Log
 
         fields = ['date', 'hours', 'contents']
+

@@ -1,9 +1,56 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% url "calendar_current_month" %}
 
 {#div#}
 {% block content %}
     <h3>조회</h3>
+    <div class="month-title">
+    <button id="before">
+        <form method="post" action="{% url 'look_up' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="year" value="{{ year }}"/>
+            <input type="hidden" name="month" value="{{ month }}"/>
+            <input type="hidden" name="move" value="before"/>
+            <input type="submit" name="submit" value="이전"/>
+        </form>
+    </button>
+    <h4>{{ title }}</h4>
+    <button id="next">
+        <form method="post" action="{% url 'look_up' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="year" value="{{ year }}"/>
+            <input type="hidden" name="month" value="{{ month }}"/>
+            <input type="hidden" name="move" value="next"/>
+            <input type="submit" name="submit" value="다음"/>
+        </form>
+    </button>
+    </div>
+    <table class="table">
+    <thead>
+    <th>월</th>
+    <th>화</th>
+    <th>수</th>
+    <th>목</th>
+    <th>금</th>
+    <th>토</th>
+    <th>일</th>
+    </thead>
+    <tbody>
+    {% for week in weeks %}
+        <tr>
+        {% for day in week %}
+            <td>
+                <div id="date">{{ day.date }}</div>
+                {% for log in day.logs %}
+                <div id="hours">{{ log.hours }}</div>
+                {% endfor %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
 {% endblock content %}
 {#/div#}
