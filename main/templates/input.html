@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{#div#}
+{% block content %}
+    <h3>입력</h3>
+    <div>
+    <form method="post" action="{% url 'input' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <input type="submit" name="submit" value="submit"/>
+    </form>
+    </div>
+{% endblock content %}
+{#/div#}
