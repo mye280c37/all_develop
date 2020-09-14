@@ -26,6 +26,7 @@ def input(request):
 def mapping_cal(user, year, month):
     cal = calendar.month(year, month)
     cal = cal.split('\n')
+    all_hours = 0
     weeks = []
     for i in range(2, len(cal)):
         line = cal[i]
@@ -36,6 +37,7 @@ def mapping_cal(user, year, month):
             logs = Log.objects.filter(date=today, user=user)
             if logs:
                 day = {'date': int(day), 'log': logs[0]}
+                all_hours += logs[0].hours
             else:
                 day = {'date': int(day)}
             days.append(day)
@@ -52,7 +54,8 @@ def mapping_cal(user, year, month):
         'weeks': weeks,
         'title': cal[0],
         'year': year,
-        'month': month
+        'month': month,
+        'all_hours': all_hours
     }
 
     print(data)
