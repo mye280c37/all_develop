@@ -187,12 +187,12 @@ ul ul a {
 
 .month-title #before{
     top: 0;
-    left: 25%;
+    left: 15%;
 }
 
 .month-title #next{
     top: 0;
-    right: 25%;
+    right: 15%;
 }
 
 .month-title button{
@@ -206,13 +206,39 @@ ul ul a {
     padding: 0;
 }
 
-.table td  #date{
-    height: 45px;
+.table td  .date{
+    height: 40px;
     margin: 0;
 }
 
-.table td #hours{
+.table td .hours{
     text-align: right;
     margin: 0;
     padding-right: 15px;
+}
+
+.is-work{
+    cursor: pointer;
+}
+
+#detail{
+    display: none;
+    padding-top: 8%;
+}
+
+#detail1, #detail2, #detail3{
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+#detail3{
+    border: 1px solid #353537;
+    height: 275px;
+    overflow: auto;
+    padding: 10px;
+}
+
+.form-contents textarea{
+    width: 95%;
+    height: 300px;
 }

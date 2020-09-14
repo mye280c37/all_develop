@@ -9,7 +9,17 @@
     <form method="post" action="{% url 'input' %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
-    {{ form.as_p }}
+        <p>
+            {{ form.date }}
+        </p>
+        <p>
+            근무 시간<br>
+            {{ form.hours }}
+        </p>
+        <p class="form-contents">
+            근무 내용<br>
+            {{ form.contents }}
+        </p>
     <input type="submit" name="submit" value="submit"/>
     </form>
     </div>

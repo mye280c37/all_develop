@@ -34,7 +34,10 @@ def mapping_cal(user, year, month):
         for day in dates:
             today = datetime.datetime(year=year, month=month, day=int(day))
             logs = Log.objects.filter(date=today, user=user)
-            day = {'date': int(day), 'logs': logs}
+            if logs:
+                day = {'date': int(day), 'log': logs[0]}
+            else:
+                day = {'date': int(day)}
             days.append(day)
         weeks.append(days)
 
