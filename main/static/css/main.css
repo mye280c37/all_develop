@@ -231,9 +231,14 @@ ul ul a {
     margin-bottom: 10px;
 }
 
+#detail p{
+    font-size: 1em;
+    color: black !important;
+}
+
 #detail3{
     border: 1px solid #353537;
-    height: 275px;
+    height: 250px;
     overflow: auto;
     padding: 10px;
 }
@@ -253,4 +258,9 @@ ul ul a {
 
 .sign-up-form input[type="email"]{
     width: 250px;
+}
+
+.input-form input[type="time"]{
+    margin-bottom: 10px;
+    margin-right: 8px;
 }

@@ -7,6 +7,8 @@ from django.db import models
 class Log(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
+    start = models.TimeField()
+    end = models.TimeField()
     hours = models.IntegerField()
     contents = models.TextField()
 

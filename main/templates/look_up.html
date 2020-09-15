@@ -45,7 +45,7 @@
                     <tr>
                         {% for day in week %}
                             {% if day.log %}
-                                <td class="is-work" onclick="show_detail({{ year }}, {{ month }}, {{ day.date }}, {{ day.log.hours }}, '{{ day.log.contents }}')">
+                                <td class="is-work" onclick="show_detail({{ year }}, {{ month }}, {{ day.date }}, {{ day.log.hours }}, '{{ day.log.start }}', '{{ day.log.end }}', '{{ day.log.contents }}')">
                                     <div class="date">{{ day.date }}</div>
                                     <div class="hours">{{ day.log.hours }}</div>
                                 </td>
@@ -67,10 +67,10 @@
         </div>
     </div>
     <script type="text/javascript">
-        function show_detail(year, month, date, hours, contents) {
+        function show_detail(year, month, date, hours, start, end, contents) {
             $('#detail').css('display', 'block');
-            $('#detail1').html(year+"-"+month+"-"+date);
-            $('#detail2').html("근무시간: "+hours+"시간");
+            $('#detail1').html("<h4>"+year+"-"+month+"-"+date+"</h4>");
+            $('#detail2').html("<p>출근: "+start+"<br>퇴근: "+end+"</p>"+"<p>근무시간: "+hours+"시간</p>");
             $('#detail3').html(contents);
         }
     </script>

@@ -6,15 +6,15 @@
 {% block content %}
     <h3>입력</h3>
     <div>
-    <form method="post" action="{% url 'input' %}" enctype="multipart/form-data">
+    <form class="input-form" method="post" action="{% url 'input' %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
         <p>
             {{ form.date }}
         </p>
         <p>
-            근무 시간<br>
-            {{ form.hours }}
+            출근: {{ form.start }} 퇴근: {{ form.end }}<br>
+            근무 시간: {{ form.hours }}
         </p>
         <p class="form-contents">
             근무 내용<br>
