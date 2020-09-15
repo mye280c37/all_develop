@@ -242,3 +242,15 @@ ul ul a {
     width: 95%;
     height: 300px;
 }
+
+.sign-up-form {
+    padding-top: 25px;
+}
+
+.sign-up-form p{
+    padding-left:20px
+}
+
+.sign-up-form input[type="email"]{
+    width: 250px;
+}

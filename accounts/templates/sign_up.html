@@ -3,11 +3,14 @@
 
 {#div#}
 {% block content %}
-    <form method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.media }}
-    {{ form.as_p }}
-    <input type="submit" name="submit" value="submit"/>
+    <h3>Sign Up</h3>
+    <form class="sign-up-form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>이름(ID): {{ form.username }}</p>
+        <p>Email: {{ form.email }}</p>
+        <p>phone: {{ form.phone }}</p>
+        <p>password: {{ form.password }}</p>
+        <p><input type="submit" name="submit" value="submit"/></p>
     </form>
 {% endblock content %}
 {#/div#}
