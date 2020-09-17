@@ -42,7 +42,13 @@
             </h5>
             {% if user.is_authenticated %}
                 <li>
-                    <a href="{% url 'input' %}">입력</a>
+                    <a href="{% url 'plan' %}">출근 예정</a>
+                </li>
+                <li>
+                    <a href="{% url 'schedule_inquiry' %}">스케줄 관리</a>
+                </li>
+                <li>
+                    <a href="{% url 'input' %}">일일 보고</a>
                 </li>
                 <li>
                     <a href="{% url 'look_up' %}">조회</a>

@@ -260,7 +260,60 @@ ul ul a {
     width: 250px;
 }
 
-.input-form input[type="time"]{
+.input-form input[type="text"]{
     margin-bottom: 10px;
     margin-right: 8px;
+}
+
+.week{
+    display: none;
+}
+
+.move-btn{
+    position: relative;
+}
+
+.move-btn button{
+    position: absolute;
+    border: none;
+    background-color: rgba(0,0,0,0);
+}
+
+.move-btn #before{
+    left: 0;
+    top: -20px;
+}
+
+.move-btn input[type=submit]{
+    border: none;
+    background-color: rgba(0,0,0,0);
+}
+
+.move-btn #next{
+    right: 0;
+    top: -20px;
+}
+
+.move-btn .save-plan{
+    right: 0;
+    top: 245px;
+}
+
+.plan-table th, .plan-table td, .plan-table div{
+    min-width: 100px;
+}
+
+.plan-table input[type='text']{
+    width: 80%;
+    font-size: 0.8em;
+}
+
+.plan-table div{
+    font-size: 0.8em;
+}
+
+.submit{
+    position: absolute;
+    top: 375px;
+    right: 25px;
 }
