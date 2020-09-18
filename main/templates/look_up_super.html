@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{#div#}
+{% block content %}
+    <h3>조회</h3>
+    <div class="dropdown">
+        {% if username %}
+            <p class="all_hours">{{ month }}월 총 근무 시간 > {{ all_hours }}시간</p>
+            <h5>
+                <p class="btn btn-dropdown dropdown-toggle" id="menu1" type="button">{{ username }}</p>
+            </h5>
+        {% else %}
+            <h5>
+                <p class="btn btn-dropdown dropdown-toggle" id="menu1" type="button">사용자</p>
+            </h5>
+        {% endif %}
+        <ul class="dropdown-menu">
+            {% for user in all_users %}
+                <li role="presentation"><a tabindex="-1" href="{% url 'look_up_detail' user.username %}">{{ user.username }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-9">
+            <div class="month-title">
+                <button id="before">
+                    <form method="post" action="{% url 'look_up' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="year" value="{{ year }}"/>
+                        <input type="hidden" name="month" value="{{ month }}"/>
+                        <input type="hidden" name="move" value="before"/>
+                        <input type="submit" name="submit" value="이전"/>
+                    </form>
+                </button>
+                <h4>{{ title }}</h4>
+                <button id="next">
+                    <form method="post" action="{% url 'look_up' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="year" value="{{ year }}"/>
+                        <input type="hidden" name="month" value="{{ month }}"/>
+                        <input type="hidden" name="move" value="next"/>
+                        <input type="submit" name="submit" value="다음"/>
+                    </form>
+                </button>
+            </div>
+            <table class="table">
+                <thead>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+                <th>토</th>
+                <th>일</th>
+                </thead>
+                <tbody>
+                {% for week in weeks %}
+                    <tr>
+                        {% for day in week %}
+                            {% if day.log %}
+                                <td class="is-work"
+                                    onclick="show_detail({{ year }}, {{ month }}, {{ day.date }}, {{ day.log.hours }}, '{{ day.log.start }}', '{{ day.log.end }}', '{{ day.log.contents }}', {{ day.log.pk }})">
+                                    <div class="date">{{ day.date }}</div>
+                                    <div class="hours">{{ day.log.hours }}</div>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <div class="date">{{ day.date }}</div>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-3" id="detail">
+            <div id="detail1"></div>
+            <div id="detail2"></div>
+            <div id="detail3"></div>
+            <form method="post" action="{% url 'input_edit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div id="detail4"></div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".dropdown-toggle").click(function () {
+                var status = $('.dropdown-menu').css('display');
+                if (status == 'block') {
+                    $('.dropdown-menu').css('display', 'none');
+                } else {
+                    $('.dropdown-menu').css('display', 'block');
+                }
+            })
+        });
+
+        function show_detail(year, month, date, hours, start, end, contents, pk) {
+            $('#detail').css('display', 'block');
+            $('#detail1').html("<h4>" + year + "-" + month + "-" + date + "</h4>");
+            $('#detail2').html("<p>출근: " + start + "<br>퇴근: " + end + "</p>" + "<p>근무시간: " + hours + "시간</p>");
+            $('#detail3').html(contents);
+            $('#detail4').html('<input type="hidden" name="pk" value="' + pk + '"><input type="submit" name="수정" value="수정">');
+        }
+    </script>
+
+{% endblock content %}
+{#/div#}

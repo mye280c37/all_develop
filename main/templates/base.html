@@ -21,9 +21,7 @@
     <!-- Sidebar -->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <a href="{% url 'index' %}"><img
-                    style="max-width:60%; display:block; margin-top: 50px; margin-left:auto; margin-right:auto;"
-                    src="https://first-class.co.kr/static/img/webLogo.png" alt=""></a>
+            <h2>All Develop</h2>
         </div>
         <ul class="list-unstyled components">
             <h5>
@@ -50,9 +48,15 @@
                 <li>
                     <a href="{% url 'input' %}">일일 보고</a>
                 </li>
-                <li>
-                    <a href="{% url 'look_up' %}">조회</a>
-                </li>
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'look_up_super' %}">조회</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'look_up' %}">조회</a>
+                    </li>
+                {% endif %}
             {% endif %}
         </ul>
     </nav>

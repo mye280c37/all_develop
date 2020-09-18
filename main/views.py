@@ -27,6 +27,11 @@ def mapping_cal(user, year, month, mode):
         results = loading_individual_logs(user, year, month, cal)
         weeks = results[0]
         data['all_hours'] = results[1]
+    # 슈퍼유저 조회
+    elif mode == 3:
+        results = loading_cal_and_users(user, cal)
+        weeks = results[0]
+        data['all_users'] = results[1]
     # 출근 예정
     else:
         weeks = loading_weekly(user, year, month, cal)
@@ -68,6 +73,7 @@ def loading_individual_logs(user, year, month, cal):
     return (weeks, all_hours)
 
 
+
 def loading_all_plans(year, month, cal):
     weeks = []
     for i in range(2, len(cal)):
@@ -96,6 +102,22 @@ def loading_all_plans(year, month, cal):
         weeks.append(days)
 
     return weeks
+
+
+def loading_cal_and_users(user, cal):
+    all_users = User.objects.filter(is_superuser=False)
+    weeks = []
+    for i in range(2, len(cal)):
+        line = cal[i]
+        dates = line.split()
+        days = []
+        for day in dates:
+            day = {'date': int(day)}
+            days.append(day)
+
+        weeks.append(days)
+
+    return (weeks, all_users)
 
 
 def loading_weekly(user, year, month, cal):
@@ -245,10 +267,65 @@ def look_up(request):
                 move_datetime = datetime.datetime(year=year+1, month=1, day=1)
             else:
                 move_datetime = datetime.datetime(year=year, month=month+1, day=1)
-
             data = mapping_cal(user, move_datetime.year, move_datetime.month, 2)
 
     return render(request, 'look_up.html', data)
+
+
+def look_up_super(request):
+    user = request.user
+    today = datetime.datetime.now()
+    data = mapping_cal(user, today.year, today.month, 3)
+    if request.method == "POST":
+        form = request.POST
+        year = int(form['year'])
+        month = int(form['month'])
+        move = form['move']
+        if move == "before":
+            if month == 1:
+                move_datetime = datetime.datetime(year=year - 1, month=12, day=1)
+            else:
+                move_datetime = datetime.datetime(year=year, month=month - 1, day=1)
+            data = mapping_cal(user, move_datetime.year, move_datetime.month, 3)
+        else:
+            if month == 12:
+                move_datetime = datetime.datetime(year=year + 1, month=1, day=1)
+            else:
+                move_datetime = datetime.datetime(year=year, month=month + 1, day=1)
+            data = mapping_cal(user, move_datetime.year, move_datetime.month, 3)
+
+    return render(request, 'look_up_super.html', data)
+
+
+def look_up_super_detail(request, username):
+    if User.objects.filter(username=username):
+        user = User.objects.get(username=username)
+        today = datetime.datetime.now()
+        data = mapping_cal(user, today.year, today.month, 2)
+        if request.method == "POST":
+            form = request.POST
+            year = int(form['year'])
+            month = int(form['month'])
+            move = form['move']
+            if move == "before":
+                if month == 1:
+                    move_datetime = datetime.datetime(year=year - 1, month=12, day=1)
+                else:
+                    move_datetime = datetime.datetime(year=year, month=month - 1, day=1)
+                data = mapping_cal(user, move_datetime.year, move_datetime.month, 2)
+            else:
+                if month == 12:
+                    move_datetime = datetime.datetime(year=year + 1, month=1, day=1)
+                else:
+                    move_datetime = datetime.datetime(year=year, month=month + 1, day=1)
+                data = mapping_cal(user, move_datetime.year, move_datetime.month, 2)
+        data['username'] = username
+        data['all_users'] = User.objects.filter(is_superuser=False)
+        return render(request, 'look_up_super.html', data)
+
+    else:
+        return False
+
 
 
 def save_plan(request):

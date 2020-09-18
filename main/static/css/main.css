@@ -317,3 +317,35 @@ ul ul a {
     top: 375px;
     right: 25px;
 }
+
+#content h5{
+    text-align: right;
+    cursor: pointer;
+    color: #353537;
+}
+
+.btn-dropdown{
+    width: 160px;
+    background-color: rgba(0,0,0,0);
+    color: #353537;
+    border: none;
+}
+
+.dropdown-menu{
+    display: none;
+    width: 160px;
+    left: 100%;
+    margin-left: -160px;
+    text-align: center;
+}
+
+.dropdown .all_hours{
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.sidebar-header h2{
+    text-align: center;
+    margin-top: 45px;
+}
