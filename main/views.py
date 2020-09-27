@@ -41,13 +41,11 @@ def mapping_cal(user, year, month, mode):
     weeks.pop()
 
     if len(weeks[0]) != 7:
-        print(type(weeks[0]))
         while len(weeks[0]) < 7:
             weeks[0].insert(0, " ")
 
     data['weeks'] = weeks
 
-    print(data)
     return data
 
 
@@ -121,6 +119,8 @@ def loading_cal_and_users(user, cal):
 
 
 def loading_weekly(user, year, month, cal):
+    today = datetime.datetime.now()
+    flag = 0
     weeks = []
     index = 0
     for i in range(2, len(cal)):
@@ -130,17 +130,24 @@ def loading_weekly(user, year, month, cal):
         dates = line.split()
         week = {}
         days = []
-        for day in dates:
-            today = datetime.datetime(year=year, month=month, day=int(day))
-            if Plan.objects.filter(date=today, user=user):
-                plan = Plan.objects.get(date=today, user=user)
-                day = {'date': int(day), 'form': plan}
+        for date in dates:
+            a_day = datetime.datetime(year=year, month=month, day=int(date))
+            if Plan.objects.filter(date=a_day, user=user):
+                plan = Plan.objects.get(date=a_day, user=user)
+                day = {'date': int(date), 'form': plan}
             else:
-                day = {'date': int(day)}
+                day = {'date': int(date)}
+            if a_day.strftime("%Y-%m-%d") == today.strftime("%Y-%m-%d"):
+                flag = 1
             days.append(day)
 
         week['days'] = days
         week['index'] = index
+        if flag == 1:
+            week['flag'] = 1
+            flag = 0
+        else:
+            week['flag'] = 0
         index += 1
         if i == len(cal) - 2:
             week['type'] = 'last'
@@ -152,7 +159,6 @@ def loading_weekly(user, year, month, cal):
 
 
     if len(weeks[0]['days']) != 7:
-        print(type(weeks[0]['days']))
         while len(weeks[0]['days']) < 7:
             weeks[0]['days'].insert(0, " ")
 
@@ -163,7 +169,6 @@ def plan(request):
     user = request.user
     today = datetime.datetime.now()
     data = mapping_cal(user, today.year, today.month, 0)
-    print(data)
     if request.method == "POST":
         form = request.POST
         year = int(form['year'])
@@ -217,7 +222,6 @@ def input(request):
             log = form.save(commit=False)
             log.user = User.objects.get(username=request.user)
             log.save()
-            print(request.user)
             return redirect('look_up')
     else:
         form = CreateLog()
@@ -228,9 +232,7 @@ def input_edit(request):
     if request.method == "POST":
         pk = int(request.POST['pk'])
         log = Log.objects.get(pk=pk)
-        print(log)
         form = CreateLog(instance=log)
-        print(form)
         return render(request, 'input_edit.html', {'form': form, 'pk': pk })
 
 
@@ -242,7 +244,6 @@ def save_input(request, pk):
             log = form.save(commit=False)
             log.user = User.objects.get(username=request.user)
             log.save()
-            print(request.user)
             return redirect('look_up')
         return redirect('input_edit')
 
@@ -330,10 +331,8 @@ def look_up_super_detail(request, username):
 
 def save_plan(request):
     if request.method == "POST":
-        print(request.POST)
         result = dict(request.POST)
         values = list(result.values())[2:]
-        print(values)
         values_day = []
         value_day = {}
         for i in range(len(values)):
@@ -346,6 +345,7 @@ def save_plan(request):
                 value_day['start'] = values[i][0]
             else:
                 value_day['end'] = values[i][0]
+        values_day.append(value_day)
         for value in values_day:
             if value['start'] != '' and value['end'] != '':
                 user = User.objects.get(username=request.user)
@@ -359,7 +359,5 @@ def save_plan(request):
                 plan.end = value['end']
                 plan.save()
 
-    print("흠")
-    print(values_day)
 
     return redirect('schedule_inquiry')

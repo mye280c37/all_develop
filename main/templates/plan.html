@@ -4,102 +4,108 @@
 
 {#div#}
 {% block content %}
-    <h3>출근예정</h3>
-    <p>30분 단위로 입력해주세요. 예시: 11:00, 16:30</p>
-    <div>
-        <div class="month-title">
-            <h4>{{ title }}</h4>
-        </div>
-        <table class="table plan-table">
-            <thead>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-            <th>토</th>
-            <th>일</th>
-            </thead>
-            <tbody>
-            {% for week in weeks %}
-                <form method="post" id="form{{ week.index }}" action="{% url 'save_plan' %}"
-                      enctype="multipart/form-data">
-                    <tr id="{{ week.index }}" class="week">
-                        {% for day in week.days %}
-                            <td>
-                                <div class="date">{{ day.date }}</div>
-                                {% if day.date %}
-                                    <div class="plan-form form{{ week.index }}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="date{{ day.date }}"
-                                               value="{{ year }}-{{ month }}-{{ day.date }}">
-                                        {% if day.form %}
-                                            출근<br>
-                                            <input type="text" name="start{{ day.date }}" value="{{ day.form.start }}"><br>
-                                            퇴근<br>
-                                            <input type="text" name="end{{ day.date }}" value="{{ day.form.end }}"><br>
-                                        {% else %}
-                                            출근<br>
-                                            <input type="text" name="start{{ day.date }}"><br>
-                                            퇴근<br>
-                                            <input type="text" name="end{{ day.date }}"><br>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                    <input class="submit" id="submit{{ week.index }}" type="submit" name="submit" value="submit">
-                </form>
-                {% if week.type == 'last' %}
-                    <div class="move-btn" id="btn{{ week.index }}">
-                        <button id="before" onclick="move_week('{{ week.index }}',-1)">
-                            이전
-                        </button>
-                        <form method="post" action="{% url 'plan' %}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" name="year" value="{{ year }}"/>
-                            <input type="hidden" name="month" value="{{ month }}"/>
-                            <input type="hidden" name="move" value="next"/>
-                            <button id="next"><input type="submit" name="submit" value="다음"/></button>
-                        </form>
-                    </div>
-                {% elif week.type == 'first' %}
-                    <div class="move-btn" id="btn{{ week.index }}">
-                        <form method="post" action="{% url 'plan' %}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" name="year" value="{{ year }}"/>
-                            <input type="hidden" name="month" value="{{ month }}"/>
-                            <input type="hidden" name="move" value="before"/>
-                            <button id="before"><input type="submit" name="submit" value="이전"/></button>
-                        </form>
-                        <button id="next" onclick="move_week('{{ week.index }}',1)">
-                            다음
-                        </button>
-                    </div>
-                {% else %}
-                    <div class="move-btn" id="btn{{ week.index }}">
-                        <button id="before" onclick="move_week('{{ week.index }}',-1)">
-                            이전
-                        </button>
-                        <button id="next" onclick="move_week('{{ week.index }}',1)">
-                            다음
-                        </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
+<h3>출근예정</h3>
+<p>30분 단위로 입력해주세요. 예시: 11:00, 16:30</p>
+<div>
+    <div class="month-title">
+        <h4>{{ title }}</h4>
     </div>
+    <table class="table plan-table">
+        <thead>
+        <th>월</th>
+        <th>화</th>
+        <th>수</th>
+        <th>목</th>
+        <th>금</th>
+        <th>토</th>
+        <th>일</th>
+        </thead>
+        <tbody>
+        {% for week in weeks %}
+        <tr id="{{ week.index }}" class="week tr{{ week.flag }}">
+            <form method="post" id="form{{ week.index }}" action="{% url 'save_plan' %}" enctype="multipart/form-data">
+                {% for day in week.days %}
+                <td>
+                    <div class="date">{{ day.date }}</div>
+                    {% if day.date %}
+                    <div>
+                        {% csrf_token %}
+                        <input type="hidden" name="date{{ day.date }}"
+                               value="{{ year }}-{{ month }}-{{ day.date }}">
+                        {% if day.form %}
+                        출근<br>
+                        <input type="text" name="start{{ day.date }}" value="{{ day.form.start }}"><br>
+                        퇴근<br>
+                        <input type="text" name="end{{ day.date }}" value="{{ day.form.end }}"><br>
+                        {% else %}
+                        출근<br>
+                        <input type="text" name="start{{ day.date }}"><br>
+                        퇴근<br>
+                        <input type="text" name="end{{ day.date }}"><br>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </td>
+                {% endfor %}
+                <input class="submit {{ week.flag }}" id="submit{{ week.index }}" type="submit" name="submit"
+               value="submit">
+            </form>
+        </tr>
+        {% if week.type == 'last' %}
+        <div class="move-btn {{ week.flag }}" id="btn{{ week.index }}">
+            <button id="before" onclick="move_week('{{ week.index }}',-1)">
+                이전
+            </button>
+            <form method="post" action="{% url 'plan' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="year" value="{{ year }}"/>
+                <input type="hidden" name="month" value="{{ month }}"/>
+                <input type="hidden" name="move" value="next"/>
+                <button id="next"><input type="submit" name="submit" value="다음"/></button>
+            </form>
+        </div>
+        {% elif week.type == 'first' %}
+        <div class="move-btn {{ week.flag }}" id="btn{{ week.index }}">
+            <form method="post" action="{% url 'plan' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="year" value="{{ year }}"/>
+                <input type="hidden" name="month" value="{{ month }}"/>
+                <input type="hidden" name="move" value="before"/>
+                <button id="before"><input type="submit" name="submit" value="이전"/></button>
+            </form>
+            <button id="next" onclick="move_week('{{ week.index }}',1)">
+                다음
+            </button>
+        </div>
+        {% else %}
+        <div class="move-btn {{ week.flag }}" id="btn{{ week.index }}">
+            <button id="before" onclick="move_week('{{ week.index }}',-1)">
+                이전
+            </button>
+            <button id="next" onclick="move_week('{{ week.index }}',1)">
+                다음
+            </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    <script type="text/javascript">
-        $('#0').css('display', 'table-row')
+<script type="text/javascript">
         $('.move-btn').css('display', 'none');
-        $('#btn0').css('display', 'block');
         $('.plan-form').css('display', 'none');
-        $('.form0').css('display', 'block');
         $('.submit').css('display', 'none');
-        $('#submit0').css('display', 'block');
+        if ($('.tr1').length > 0){
+            $('.tr1').css('display', 'table-row');
+            $('.1').css('display', 'block');
+        }else{
+            $('#0').css('display', 'table-row');
+            $('#btn0').css('display', 'block');
+            $('#submit0').css('display', 'block');
+        }
+
+
 
         function show_detail(year, month, date, hours, start, end, contents) {
             $('#detail').css('display', 'block');
@@ -115,7 +121,7 @@
             $('.move-btn').css('display', 'none');
             $('#btn' + now).css('display', 'block');
             $('.plan-form').css('display', 'none');
-            $('.form' + now).css('display', 'block');
+            $('#form' + now).css('display', 'block');
             $('.submit').css('display', 'none');
             $('#submit' + now).css('display', 'block');
         }
@@ -129,7 +135,10 @@
             });
         }
 
-    </script>
+
+
+
+</script>
 
 
 {% endblock content %}

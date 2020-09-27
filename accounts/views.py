@@ -8,8 +8,11 @@ def sign_up(request):
     if request.method == "POST":
         form = CreateAccount(request.POST)
         if form.is_valid():
-            user = form.save()
-            auth.login(request, user)
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])
+            if user.check_password(form.cleaned_data['password2']):
+                user.save()
+                auth.login(request, user)
             return redirect('input')
     else:
         form = CreateAccount()

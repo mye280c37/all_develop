@@ -8,8 +8,9 @@
         {% csrf_token %}
         <p>이름(ID): {{ form.username }}</p>
         <p>Email: {{ form.email }}</p>
-        <p>phone: {{ form.phone }}</p>
-        <p>password: {{ form.password }}</p>
+        <p>Phone: {{ form.phone }}</p>
+        <p>Password: {{ form.password1 }}</p>
+        <p>Password Again: {{ form.password2 }}</p>
         <p><input type="submit" name="submit" value="submit"/></p>
     </form>
 {% endblock content %}
