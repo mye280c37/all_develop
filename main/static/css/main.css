@@ -265,55 +265,21 @@ ul ul a {
     margin-right: 8px;
 }
 
-.week{
-    display: none;
-}
-
-.move-btn{
-    position: relative;
-}
-
-.move-btn button{
-    position: absolute;
-    border: none;
-    background-color: rgba(0,0,0,0);
-}
-
-.move-btn #before{
-    left: 0;
-    top: -20px;
-}
-
-.move-btn input[type=submit]{
-    border: none;
-    background-color: rgba(0,0,0,0);
-}
-
-.move-btn #next{
-    right: 0;
-    top: -20px;
-}
-
-.move-btn .save-plan{
-    right: 0;
-    top: 245px;
-}
-
-.plan-table th, .plan-table td, .plan-table div{
-    min-width: 100px;
+.plan-table th, .plan-table td{
+    width: 14%;
 }
 
 .plan-table input[type='text']{
-    width: 80%;
+    width: 95%;
 }
 
 .plan-table div{
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .submit{
     position: absolute;
-    top: 375px;
+    top: 425px;
     right: 25px;
 }
 
@@ -347,4 +313,30 @@ ul ul a {
 .sidebar-header h2{
     text-align: center;
     margin-top: 45px;
+}
+
+.gray-date{
+    color: rgba(125,125,125,0.5)
+}
+
+.plan-table div{
+    padding: 10px 0 10px 10px;
+}
+
+.next, .before{
+    position: absolute;
+}
+
+.before{
+    left: 45px;
+    top: 150px;
+}
+
+.next{
+    right: 45px;
+    top: 150px;
+}
+
+.today-box{
+    background-color: rgba(125,125,125,0.5);
 }

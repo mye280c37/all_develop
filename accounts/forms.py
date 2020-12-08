@@ -1,12 +1,8 @@
-from django import forms
 from .models import *
+from django.contrib.auth.forms import UserCreationForm
 
 
-class CreateAccount(forms.ModelForm):
-    phone = forms.CharField(widget=forms.TextInput(attrs={'type': 'tel', 'pattern': "[0-9]{3}[0-9]{4}[0-9]{4}"}))
-    password1 = forms.CharField(widget=forms.TextInput(attrs={'type': 'password'}))
-    password2 = forms.CharField(widget=forms.TextInput(attrs={'type': 'password'}))
-    class Meta:
+class CreateAccount(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
         model = User
-
-        fields = ['username', 'email', 'phone', 'password1', 'password2']
+        fields = ["username", "email", "phone", "password1", "password2"]

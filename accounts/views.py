@@ -2,18 +2,18 @@ from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
 from django.contrib import auth
+from django.contrib.auth import login, authenticate
 
 # Create your views here.
 def sign_up(request):
     if request.method == "POST":
         form = CreateAccount(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password1'])
-            if user.check_password(form.cleaned_data['password2']):
-                user.save()
-                auth.login(request, user)
+            user = form.save()
+            auth.login(request, user)
             return redirect('input')
+        else:
+            print(form.errors)
     else:
         form = CreateAccount()
 
@@ -29,7 +29,8 @@ def login(request):
         password = request.POST['password']
 
         # 해당 username과 password와 일치하는 user 객체를 가져온다.
-        user = User.objects.get(username=username, password=password)
+        # user = User.objects.get(username=username, password=password)
+        user = authenticate(username=username, password=password)
 
         # 해당 user 객체가 존재한다면
         if user is not None:
