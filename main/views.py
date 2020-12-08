@@ -158,7 +158,7 @@ def mapping_week(user, year, month, day):
             day_info = {'date': date, 'form': plan}
         else:
             day_info = {'date': date}
-        if date == today.day:
+        if datetime_obj.date() == today.date():
             day_info['today'] = 1
         day_list.append(day_info)
     if last_weekday != 6:
