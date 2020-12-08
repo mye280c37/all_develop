@@ -8,7 +8,7 @@
     <h5>{{ month }}월 총 근무 시간 > {{ all_hours }}시간</h5>
     <div class="row">
         <div class="col-9">
-            <div class="month-title">
+            <div class="month-title schedule-month">
                 <button id="before">
                     <form method="post" action="{% url 'look_up' %}" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -29,7 +29,7 @@
                     </form>
                 </button>
             </div>
-            <table class="table">
+            <table class="table schedule-month">
                 <thead>
                 <th>월</th>
                 <th>화</th>

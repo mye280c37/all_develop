@@ -7,7 +7,7 @@
     <h3>스케줄 관리</h3>
     <div class="row">
         <div class="col-9">
-            <div class="month-title">
+            <div class="month-title schedule-month">
                 <button id="before">
                     <form method="post" action="{% url 'schedule_inquiry' %}" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -28,7 +28,7 @@
                     </form>
                 </button>
             </div>
-            <table class="table">
+            <table class="table schedule-month">
                 <thead>
                 <th>월</th>
                 <th>화</th>
