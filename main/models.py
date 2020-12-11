@@ -19,7 +19,7 @@ class Log(models.Model):
     date = models.DateField()
     start = models.CharField(max_length=15)
     end = models.CharField(max_length=15)
-    hours = models.IntegerField()
+    hours = models.FloatField()
     contents = models.TextField()
 
     def __str__(self):

@@ -12,5 +12,4 @@ urlpatterns = [
     path('look_up/super/<username>', views.look_up_super_detail, name='look_up_detail'),
     path('save_plan/', views.save_plan, name='save_plan'),
     path('input/edit/', views.input_edit, name='input_edit'),
-    path('input/save/<int:pk>', views.save_input, name='save_input')
 ]

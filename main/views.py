@@ -23,7 +23,7 @@ def mapping_cal(user, year, month, mode):
 
     # 스케줄 관리
     if mode == 1:
-        weeks = loading_all_plans(year, month, cal)
+        weeks = loading_all_plans(user, year, month, cal)
     # 조회
     elif mode == 2:
         results = loading_individual_logs(user, year, month, cal)
@@ -31,7 +31,7 @@ def mapping_cal(user, year, month, mode):
         data['all_hours'] = results[1]
     # 슈퍼유저 조회
     else:
-        results = loading_cal_and_users(user, cal)
+        results = loading_cal_and_users(user, year, month, cal)
         weeks = results[0]
         data['all_users'] = results[1]
 
@@ -68,7 +68,7 @@ def loading_individual_logs(user, year, month, cal):
     return (weeks, all_hours)
 
 
-def loading_all_plans(year, month, cal):
+def loading_all_plans(user, year, month, cal):
     weeks = []
     for i in range(2, len(cal)):
         line = cal[i]
@@ -86,6 +86,8 @@ def loading_all_plans(year, month, cal):
                         'start': plan.start,
                         'end': plan.end
                     }
+                    if user.username == plan.user.username:
+                        individual_plan['flag'] = 1
                     plan_all.append(individual_plan)
                     #한 명의 plan이 dict 형태로 그 dict를 list로 묶음
                 day = {'date': int(day), 'plans': plan_all, 'people': people}
@@ -98,19 +100,28 @@ def loading_all_plans(year, month, cal):
     return weeks
 
 
-def loading_cal_and_users(user, cal):
-    all_users = User.objects.filter(is_superuser=False)
-    weeks = []
-    for i in range(2, len(cal)):
-        line = cal[i]
-        dates = line.split()
-        days = []
-        for day in dates:
-            day = {'date': int(day)}
-            days.append(day)
+def loading_cal_and_users(user, year, month, cal):
+    if user.is_superuser:
+        all_users = User.objects.filter(is_superuser=False)
+        weeks = []
+        all_hours = 0
+        for i in range(2, len(cal)):
+            line = cal[i]
+            dates = line.split()
+            days = []
+            for day in dates:
+                today = datetime.datetime(year=year, month=month, day=int(day))
+                logs = Log.objects.filter(date=today, user=user)
+                if logs:
+                    day = {'date': int(day), 'log': logs[0]}
+                    all_hours += logs[0].hours
+                else:
+                    day = {'date': int(day)}
+                days.append(day)
 
-        weeks.append(days)
-    return weeks, all_users
+            weeks.append(days)
+        return weeks, all_users
+    return [], []
 
 
 end_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -242,10 +253,17 @@ def input(request):
     if request.method == "POST":
         form = CreateLog(request.POST)
         if form.is_valid():
-            log = form.save(commit=False)
-            log.user = User.objects.get(username=request.user)
-            log.contents = form.cleaned_data['contents'].replace('\r\n', ', ')
-            log.save()
+            user = User.objects.get(username=request.user)
+            date = form.cleaned_data['date']
+            if Log.objects.filter(user=user, date=date):
+                log = Log.objects.get(user=user, date=date)
+                form = CreateLog(request.POST, instance=log)
+                form.save()
+            else:
+                log = form.save(commit=False)
+                log.user = User.objects.get(username=request.user)
+                log.contents = form.cleaned_data['contents'].replace('\r\n', ', ')
+                log.save()
             return redirect('look_up')
     else:
         form = CreateLog()
@@ -259,19 +277,6 @@ def input_edit(request):
         log = Log.objects.get(pk=pk)
         form = CreateLog(instance=log)
         return render(request, 'input_edit.html', {'form': form, 'pk': pk })
-
-
-@login_required
-def save_input(request, pk):
-    log = Log.objects.get(pk=pk)
-    if request.method == "POST":
-        form = CreateLog(request.POST, instance=log)
-        if form.is_valid():
-            log = form.save(commit=False)
-            log.user = User.objects.get(username=request.user)
-            log.save()
-            return redirect('look_up')
-        return redirect('input_edit')
 
 
 @login_required
@@ -322,6 +327,7 @@ def look_up_super(request):
             else:
                 move_datetime = datetime.datetime(year=year, month=month + 1, day=1)
             data = mapping_cal(user, move_datetime.year, move_datetime.month, 3)
+    print(data)
 
     return render(request, 'look_up_super.html', data)
 
