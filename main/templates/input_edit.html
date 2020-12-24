@@ -6,7 +6,7 @@
 {% block content %}
     <h3>일일 보고</h3>
     <div>
-    <form class="input-form" method="post" action="{% url 'input' %}" enctype="multipart/form-data">
+    <form class="input-form" method="post" action="{% url 'save_input' pk %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
         <p>
