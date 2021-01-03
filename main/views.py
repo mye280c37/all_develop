@@ -176,8 +176,11 @@ def mapping_week(user, year, month, day):
 def plan(request):
     user = request.user
     today = datetime.datetime.now()
-    if datetime.datetime(year=today.year, month=2, day=29):
+    try:
+        datetime.datetime(year=today.year, month=2, day=29)
         end_month[1] = 29
+    except:
+        pass
     if request.method == "POST":
         form = request.POST
         year = int(form['year'])
